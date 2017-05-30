@@ -7,12 +7,12 @@
 # you're doing.
 Vagrant.configure("2") do |config|
 
-	config.vm.define "RMQ1" do |RMQ1|
-	  	config.vm.box = "bento/ubuntu-16.04"
+	config.vm.define "rmq1" do |rmq1|
+	  	rmq1.vm.box = "bento/ubuntu-16.04"
 	end
 
-	config.vm.define "RMQ2" do |RMQ2|
-  		config.vm.box = "bento/ubuntu-16.04"
+	config.vm.define "rmq2" do |rmq2|
+  		rmq2.vm.box = "bento/ubuntu-16.04"
 	end
 
   # Create a forwarded port mapping which allows access to a specific port
