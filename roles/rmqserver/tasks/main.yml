@@ -51,3 +51,14 @@
       tags:
         ha-mode: all
     become: true
+            
+  - name: add common erlang cookie
+    template:
+      src: erlang.cookie.j2
+      dest: "{{ erlang_cookie_file }}"
+      owner: rabbitmq
+      group: rabbitmq
+      mode: 0400
+      backup: yes
+    become: true
+
