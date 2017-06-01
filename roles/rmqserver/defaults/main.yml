@@ -3,3 +3,6 @@
 # Erlang Cookie
 erlang_cookie_file: /var/lib/rabbitmq/.erlang.cookie
 erlang_cookie: FhVHxb20oFhL9/cxKhdKRg==
+
+# Clustering config
+rabbit_config_file: /etc/rabbitmq/rabbitmq.config

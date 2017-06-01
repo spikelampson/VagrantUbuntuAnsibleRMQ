@@ -19,12 +19,14 @@
     with_items:
       - rabbitmq-server
     become: true
-
+            
   - name: enable rabbitmq plugins
     rabbitmq_plugin: names=rabbitmq_management,rabbitmq_tracing,rabbitmq_federation state=enabled
     become: true
-    notify:
-    - restart rabbitmq
+
+  - name: restart rabbitmq
+    service: name=rabbitmq-server state=restarted
+    become: true
 
   - name: add users
     rabbitmq_user: user={{item}} password=changeme tags=administrator,{{item}} vhost=/ configure_priv=.* write_priv=.* read_priv=.* state=present
@@ -51,7 +53,15 @@
       tags:
         ha-mode: all
     become: true
-            
+
+  - name: cluster | stopping rabbitmq app
+    command: rabbitmqctl stop_app
+    become: true
+
+  - name: cluster | resetting rabbitmq app
+    command: rabbitmqctl reset
+    become: true
+
   - name: add common erlang cookie
     template:
       src: erlang.cookie.j2
@@ -60,5 +70,23 @@
       group: rabbitmq
       mode: 0400
       backup: yes
+    become: true
+
+  - name: add clustering config
+    template:
+      src: rabbit.config.j2
+      dest: "{{ rabbit_config_file }}"
+      owner: rabbitmq
+      group: rabbitmq
+      mode: 0400
+      backup: yes
+    become: true
+
+  - name: restart rabbitmq
+    service: name=rabbitmq-server state=restarted
+    become: true
+
+  - name: cluster | start rabbitmq app
+    command: rabbitmqctl start_app
     become: true
 

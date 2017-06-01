@@ -1,0 +1,14 @@
+[
+  { rabbit,
+    [
+      {cluster_nodes, 
+        {[
+          {% for host in play_hosts %}
+'rabbit@{{ host }}'
+	  {%- if not loop.last %},{% endif %}
+          {% endfor %} 
+        ], disc}
+      }
+    ]
+  }
+]. 
