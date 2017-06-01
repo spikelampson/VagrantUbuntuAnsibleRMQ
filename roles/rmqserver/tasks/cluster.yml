@@ -1,0 +1,24 @@
+---
+
+  - debug: 
+      msg: "{{ inventory_hostname }} != {{ hostvars[groups['all'][0]]['inventory_hostname'] }}"
+
+  - name: cluster | stopping rabbitmq app
+    command: rabbitmqctl stop_app
+    become: true
+
+  - name: cluster | resetting rabbitmq app
+    command: rabbitmqctl reset
+    become: true
+
+  - name: cluster | join cluster
+    command: rabbitmqctl join_cluster rabbit@{{ hostvars[groups['all'][0]]['inventory_hostname'] }}
+    become: true
+
+  - name: restart rabbitmq
+    service: name=rabbitmq-server state=restarted
+    become: true
+
+  - name: start rabbitmq app
+    command: rabbitmqctl start_app
+    become: true

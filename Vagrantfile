@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
 	config.hostmanager.enabled = true
 	config.hostmanager.manage_guest = true
 	config.hostmanager.include_offline = true
-	N = 3
+	N = 2
 	(1..N).each do |rabbit_id|
 		#config.vm.provision :hostmanager
 		config.vm.define "rabbit#{rabbit_id}" do |rabbit|
