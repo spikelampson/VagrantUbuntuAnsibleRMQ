@@ -1,59 +1,74 @@
 ---
-  - name: debug test
-    debug: 
-      msg: "{{ inventory_hostname }} != {{ hostvars[groups['all'][0]]['inventory_hostname'] }}"
 
-
-  - name: ensure python-software-properties is installed
+  - name: rabbitmq | install | ensure python-software-properties is installed
     apt: pkg=python-software-properties state=installed
     become: true
 
-  - name: add RabbitMQ trusted key
+  - name: rabbitmq | install | add RabbitMQ trusted key
     apt_key: 
       url: https://www.rabbitmq.com/rabbitmq-release-signing-key.asc 
       state: present
     become: true
 
-  - name: add rabbitmq official apt repository
-    apt_repository: repo='deb http://www.rabbitmq.com/debian/ testing main' state=present
+  - name: rabbitmq | install | add rabbitmq official apt repository
+    apt_repository: 
+      repo: 'deb http://www.rabbitmq.com/debian/ testing main' 
+      state: present
     become: true
 
-  - name: install package
-    apt: name={{ item }} update_cache=yes state=installed 
+  - name: rabbitmq | install | install package
+    apt: 
+      name: "{{ item }}" 
+      update_cache: yes 
+      state: installed 
     with_items:
       - rabbitmq-server
     become: true
             
-  - name: enable rabbitmq plugins
-    rabbitmq_plugin: names=rabbitmq_management,rabbitmq_tracing,rabbitmq_federation state=enabled
+  - name: rabbitmq | install | enable rabbitmq plugins
+    rabbitmq_plugin: 
+      names: rabbitmq_management,rabbitmq_tracing,rabbitmq_federation 
+      state: enabled
     become: true
 
-  - name: cluster | starting rabbitmq app
+  - name: rabbitmq | install | starting rabbitmq app
     command: rabbitmqctl start_app
     become: true
 
-  - name: add users
-    rabbitmq_user: user={{item}} password=changeme tags=administrator,{{item}} vhost=/ configure_priv=.* write_priv=.* read_priv=.* state=present
+  - name: rabbitmq | install | add users
+    rabbitmq_user: 
+      user: "{{item}}" 
+      password: "changeme"
+      tags: "administrator,{{item}}"
+      vhost: / 
+      configure_priv: .* 
+      write_priv: .* 
+      read_priv: .* 
+      state: present
     with_items:
-    - user1
-    - user2
+      - user1
+      - user2
     become: true
 
-  - name: remove default guest user
-    rabbitmq_user: user=guest state=absent
+  - name: rabbitmq | install | remove default guest user
+    rabbitmq_user: 
+      user: guest 
+      state: absent
     become: true
 
-  - name: restart rabbitmq
-    service: name=rabbitmq-server state=restarted
+  - name: rabbitmq | install | restart rabbitmq
+    service: 
+      name: rabbitmq-server 
+      state: restarted
     become: true
 
-  - name: ensure vhost /test is present
-    rabbitmq_vhost: name=/test state=present
+  - name: rabbitmq | install | ensure vhost /test is present
+    rabbitmq_vhost: 
+      name: /test 
+      state: present
     become: true
  
-    #- name: Update config with cluster details, restart
-
-  - name: Update policy to ensure that all queues are mirrored across the cluster
+  - name: rabbitmq | install | Update policy to ensure that all queues are mirrored across the cluster
     rabbitmq_policy:
       name: HA
       pattern: .*
@@ -62,15 +77,11 @@
         ha-mode: all
     become: true
 
-  - name: cluster | stopping rabbitmq app
+  - name: rabbitmq | install | stopping rabbitmq app
     command: rabbitmqctl stop_app
     become: true
 
-  - name: cluster | resetting rabbitmq app
-    command: rabbitmqctl reset
-    become: true
-
-  - name: add common erlang cookie
+  - name: rabbitmq | install | add common erlang cookie
     template:
       src: erlang.cookie.j2
       dest: "{{ erlang_cookie_file }}"
@@ -80,10 +91,10 @@
       backup: yes
     become: true
 
-  - name: restart rabbitmq
+  - name: rabbitmq | install | restart rabbitmq
     service: name=rabbitmq-server state=restarted
     become: true
 
-  - name: start rabbitmq app
+  - name: rabbitmq | install | start rabbitmq app
     command: rabbitmqctl start_app
     become: true

@@ -6,7 +6,7 @@
   tags: 
     - install
 
-
+  # Adds all but the first member of the inventory file to the cluster.
 - include: cluster.yml
   when: inventory_hostname != hostvars[groups['all'][0]]['inventory_hostname']
   tags:

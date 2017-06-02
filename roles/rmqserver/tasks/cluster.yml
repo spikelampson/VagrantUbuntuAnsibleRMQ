@@ -1,24 +1,28 @@
 ---
 
-  - debug: 
-      msg: "{{ inventory_hostname }} != {{ hostvars[groups['all'][0]]['inventory_hostname'] }}"
-
-  - name: cluster | stopping rabbitmq app
+  - name: rabbitmq | cluster | stopping rabbitmq app
     command: rabbitmqctl stop_app
     become: true
 
-  - name: cluster | resetting rabbitmq app
+  # This is necessary to be sure that the app will join the cluster.
+  - name: rabbitmq | cluster | resetting rabbitmq app
     command: rabbitmqctl reset
     become: true
 
-  - name: cluster | join cluster
+    # Assume that the first box in the inventory is the cluster master        
+  - name: rabbitmq | cluster | join cluster
     command: rabbitmqctl join_cluster rabbit@{{ hostvars[groups['all'][0]]['inventory_hostname'] }}
     become: true
 
-  - name: restart rabbitmq
-    service: name=rabbitmq-server state=restarted
-    become: true
-
-  - name: start rabbitmq app
+  - name: rabbitmq | cluster | start rabbitmq app
     command: rabbitmqctl start_app
     become: true
+
+  - name: rabbitmq | cluster | check if clustering has worked 0
+    command: rabbitmqctl cluster_status
+    register: cluster_status
+    become: true
+
+  - name: rabbitmq | cluster | check if clustering has worked 1          
+    debug: 
+      msg: "{{ cluster_status }}"
