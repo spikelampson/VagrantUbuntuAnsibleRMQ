@@ -18,4 +18,4 @@
     backup: yes
 
 - name: rabbitmq | nameko | run test service
-  command: nameko run hello --config {{ nameko_config_file }}
+  command: nameko run helloworld --config {{ nameko_config_file }}
