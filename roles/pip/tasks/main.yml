@@ -1,0 +1,10 @@
+---
+
+- name: pip | Download pip
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /tmp/get-pip.py
+
+- name: pip | Install pip
+  command: python /tmp/get-pip.py
+  become: yes

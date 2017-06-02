@@ -1,0 +1,21 @@
+---
+
+- name: rabbitmq | nameko | install nameko
+  pip:
+    name: nameko
+  become: yes
+
+- name: rabbitmq | nameko | add basic config
+  template:
+    src: nameko.conf.j2
+    dest: "{{ nameko_config_file }}"
+    backup: yes
+
+- name: rabbitmq | nameko | add basic test service
+  template:
+    src: nameko.helloservice.j2
+    dest: "{{ nameko_helloservice_file }}"
+    backup: yes
+
+- name: rabbitmq | nameko | run test service
+  command: nameko run hello --config {{ nameko_config_file }}

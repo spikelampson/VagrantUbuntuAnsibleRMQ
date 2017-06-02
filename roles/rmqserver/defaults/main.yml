@@ -6,3 +6,7 @@ erlang_cookie: FhVHxb20oFhL9/cxKhdKRg==
 
 # Clustering config
 rabbit_config_file: /etc/rabbitmq/rabbitmq.config
+
+# Nameko config
+nameko_config_file: ~/nameko.config.yml
+nameko_helloservice_file: ~/nameko.helloservice.py
