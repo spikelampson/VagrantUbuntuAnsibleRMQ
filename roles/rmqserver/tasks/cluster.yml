@@ -18,11 +18,13 @@
     command: rabbitmqctl start_app
     become: true
 
-  - name: rabbitmq | cluster | check if clustering has worked 0
+  - name: rabbitmq | cluster | gather cluster status information
     command: rabbitmqctl cluster_status
     register: cluster_status
     become: true
 
-  - name: rabbitmq | cluster | check if clustering has worked 1          
-    debug: 
-      msg: "{{ cluster_status }}"
+  - name: rabbitmq | cluster | Assert that all hostnames are reported in cluster_status
+    assert: 
+      that: 
+        - "'{{ hostvars[item]['inventory_hostname'] }}' in cluster_status.stdout"
+    with_items: "{{ groups['all'] }}"
