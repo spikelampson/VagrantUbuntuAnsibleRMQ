@@ -9,4 +9,4 @@ rabbit_config_file: /etc/rabbitmq/rabbitmq.config
 
 # Nameko config
 nameko_config_file: ~/nameko.config.yml
-nameko_helloservice_file: ~/nameko.helloservice.py
+nameko_helloservice_file: ~/helloworld.py
