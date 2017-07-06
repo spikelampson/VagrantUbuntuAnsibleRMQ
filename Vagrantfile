@@ -8,7 +8,7 @@ Vagrant.configure("2") do |config|
 	config.hostmanager.manage_guest = true
 	config.hostmanager.include_offline = true
 	# Number of boxes to create
-	N = 4
+	N = 3
 	(1..N).each do |rabbit_id|
 		config.vm.define "rabbit#{rabbit_id}" do |rabbit|
 			rabbit.vm.box = "bento/ubuntu-16.04" 
